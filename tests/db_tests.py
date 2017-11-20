@@ -22,7 +22,7 @@ class TodoDbTest(unittest.TestCase):
         self.app = ToDoApplication(entity_active_record_strategy=self.ar_strategy, )
 
     @async_test
-    async def test_perf_press(self):
+    async def perf_press(self):
         tasks = []
         for i in range(1, 10):
             tasks.append(self.make_todo())
