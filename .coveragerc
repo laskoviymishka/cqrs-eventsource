@@ -1,9 +1,8 @@
 [run]
-source = eventsourcing
+source = eventsource
 omit =
     */python?.?/*
     */flaskapp.py
     */flaskwsgi.py
-    */test_?.py
     */tests/*
     */contrib/*
