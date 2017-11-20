@@ -31,7 +31,7 @@ setup(
     long_description=long_description,
     keywords=['event sourcing', 'event store', 'async', 'domain driven design', 'ddd', 'cqrs', 'cqs'],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
