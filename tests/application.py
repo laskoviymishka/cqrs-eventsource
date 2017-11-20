@@ -1,6 +1,4 @@
-from typing import List, overload
-
-from peewee_async import Manager
+from typing import List
 
 from eventsource.application.base import ApplicationWithPersistencePolicies
 from eventsource.model.aggregate import AggregateRoot

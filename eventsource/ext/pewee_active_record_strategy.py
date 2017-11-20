@@ -11,6 +11,9 @@ class PeweeActiveRecordStrategy(AbstractActiveRecordStrategy):
     def __init__(self, manager, *args, **kwargs):
         self.manager = manager
         EventRecord._meta.database = self.manager.database
+        if not EventRecord.table_exists():
+            EventRecord.create_table()
+
         super(PeweeActiveRecordStrategy, self).__init__(*args, **kwargs)
 
     async def append(self, sequenced_item_or_items):
@@ -23,12 +26,12 @@ class PeweeActiveRecordStrategy(AbstractActiveRecordStrategy):
             await self.manager.create(EventRecord, **record)
 
     async def get_item(self, sequence_id, eq):
-        return await EventRecord\
-                            .select()\
-                            .where(EventRecord.sequence_id == sequence_id and EventRecord.position == eq)
+        return await EventRecord \
+            .select() \
+            .where(EventRecord.sequence_id == sequence_id and EventRecord.position == eq)
 
     async def get_items(self, sequence_id, gt=None, gte=None, lt=None, lte=None, limit=None,
-                  query_ascending=True, results_ascending=True):
+                        query_ascending=True, results_ascending=True):
         query = EventRecord.select().where(EventRecord.sequence_id == sequence_id)
         if gt is not None:
             query = query.where(EventRecord.position > gt)
@@ -66,21 +69,23 @@ class PeweeActiveRecordStrategy(AbstractActiveRecordStrategy):
 
     def to_active_record(self, item):
         return {
-            'sequence_id' : item.sequence_id,
-            'position' : item.position,
-            'topic' : item.topic,
-            'data' : item.data
+            'sequence_id': item.sequence_id,
+            'position': item.position,
+            'topic': item.topic,
+            'data': item.data
         }
 
     def from_active_record(self, item):
         kwargs = self.get_field_kwargs(item)
         return self.sequenced_item_class(**kwargs)
 
+
 class EventRecord(Model):
     sequence_id = UUIDField()
     position = BigIntegerField()
     topic = CharField(max_length=255)
     data = JSONField()
+
     class Meta:
         db_table = 'es_int_events'
         primary_key = CompositeKey('sequence_id', 'position')

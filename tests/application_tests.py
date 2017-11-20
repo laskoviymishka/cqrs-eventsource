@@ -1,11 +1,11 @@
 import unittest
+
 from aiounittest import async_test
 
 from eventsource.ext.inplaceactiverecordstrategy import InPlaceActiveRecordStrategy
 from eventsource.model.decorators import subscribe_to
-from eventsource.model.events import unsubscribe
 from eventsource.services.sequenceditem import SequencedItemFieldNames
-from tests.sample.application import ToDoAggregate, ToDoApplication
+from tests.application import ToDoAggregate, ToDoApplication
 
 
 class TodoApplicationTest(unittest.TestCase):

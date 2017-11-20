@@ -1,13 +1,10 @@
 from setuptools import find_packages, setup
 from eventsource import __version__
 
-
 long_description = """
-This package provides generic support for event sourcing in Python.
+This package provides generic support for async event sourcing in Python.
 
-`Package documentation is now available <http://eventsourcing.readthedocs.io/>`_.
-
-`Please raise issues on GitHub <https://github.com/johnbywater/eventsourcing/issues>`_.
+`Please raise issues on GitHub <https://github.com/laskoviymishka/cqrs-eventsource/issues>`_.
 """
 
 packages = find_packages(
@@ -16,23 +13,23 @@ packages = find_packages(
 )
 
 setup(
-    name='eventsourcing',
+    name='eventsourcing_async',
     version=__version__,
-    description='Event sourcing in Python',
+    description='Event sourcing async in Python',
     author='John Bywater',
-    author_email='john.bywater@appropriatesoftware.net',
-    url='https://github.com/johnbywater/eventsourcing',
+    author_email='andrei_tserakhau@epam.com',
+    url='https://github.com/laskoviymishka/cqrs-eventsource',
     packages=packages,
     install_requires=[
         'six<=1.10.99999',
         'python-dateutil',
         'peewee',
         'peewee_async',
-        'aiounittest',
+        'aiounittest', 'aiopg',
     ],
     zip_safe=False,
     long_description=long_description,
-    keywords=['event sourcing', 'event store', 'domain driven design', 'ddd', 'cqrs', 'cqs'],
+    keywords=['event sourcing', 'event store', 'async', 'domain driven design', 'ddd', 'cqrs', 'cqs'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

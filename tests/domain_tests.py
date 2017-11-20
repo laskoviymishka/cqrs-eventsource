@@ -1,6 +1,6 @@
 import unittest
 
-from tests.sample.application import ToDoAggregate
+from tests.application import ToDoAggregate
 
 
 class TodoDomainTest(unittest.TestCase):

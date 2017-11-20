@@ -184,7 +184,6 @@ _uow_handlers = OrderedDict()
 
 
 def subscribe(handler, predicate=None):
-    print(handler, predicate)
     if predicate not in _event_handlers:
         _event_handlers[predicate] = []
     _event_handlers[predicate].append(handler)
