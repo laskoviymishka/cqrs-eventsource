@@ -24,7 +24,7 @@ class TodoDbTest(asynctest.TestCase):
         )
         self.app = ToDoApplication(entity_active_record_strategy=self.ar_strategy, )
 
-    async def test_perf_press(self):
+    async def perf_press(self):
         tasks = []
         for i in range(1, 10):
             tasks.append(self.make_todo(i))
@@ -39,8 +39,8 @@ class TodoDbTest(asynctest.TestCase):
         task_len = 10
         todo_item = ToDoAggregate.create_todos(id)
         self.assertEqual(todo_item.id, id)
-
         await self.app.todos.save(todo_item)
+
         events = await self.app.todos.event_store.get_domain_events(originator_id=id)
         self.assertEqual(len(events), 1)
         todo_item = await self.app.todos.get_entity(id)
@@ -53,3 +53,6 @@ class TodoDbTest(asynctest.TestCase):
         todo_item = await self.app.todos.get_entity(id)
         self.assertEqual(len(todo_item.items), task_len)
         self.assertEqual(todo_item.todo_name, str(id))
+
+    def tearDown(self):
+        self.app.close()

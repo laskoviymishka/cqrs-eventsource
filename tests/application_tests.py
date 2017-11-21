@@ -56,3 +56,6 @@ class TodoApplicationTest(asynctest.TestCase):
         self.assertEqual(todo_item.todo_name, 'test name')
         events = await self.app.todos.event_store.get_domain_events(3)
         self.assertEqual(len(events), 2)
+
+    def tearDown(self):
+        self.app.close()

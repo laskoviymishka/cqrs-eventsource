@@ -136,3 +136,4 @@ class ToDoApplication(ApplicationWithPersistencePolicies):
             event_store=self.entity_event_store,
             event_session=EventSession(**kwargs),
             snapshot_strategy=self.snapshot_strategy, )
+
