@@ -98,6 +98,7 @@ class BusTests(unittest.TestCase):
 
         self.assertTrue(error_raised)
 
+    @async_test
     async def test_command_should_raise_when_command_not_handled(self):
         class TestCommand(Command):
             ...
@@ -105,12 +106,13 @@ class BusTests(unittest.TestCase):
         error_raised = False
         bus = Bus()
         try:
-            bus.execute_command(TestCommand())
+            await bus.execute_command(TestCommand())
         except BusResolverError:
             error_raised = True
 
         self.assertTrue(error_raised)
 
+    @async_test
     async def test_query_should_raise_when_command_not_handled(self):
         class TestQuery(QuerySpec[bool, bool]):
             ...
@@ -118,18 +120,20 @@ class BusTests(unittest.TestCase):
         error_raised = False
         bus = Bus()
         try:
-            bus.run_query(TestQuery(True))
+            await bus.run_query(TestQuery(True))
         except BusResolverError:
             error_raised = True
 
         self.assertTrue(error_raised)
 
+    @async_test
     async def test_aggregate_command_should_pass_originator(self):
         class TestAggregateCommand(AggregateCommand): ...
 
         passed_id = -1
         expected_id = 123
 
+        @command_handler(TestAggregateCommand)
         async def test_handler(command: TestAggregateCommand, **kwargs):
             nonlocal passed_id
             passed_id = command.originator_id
