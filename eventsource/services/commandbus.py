@@ -68,14 +68,11 @@ def command_handler(command_cls: type):
     def decorator(func):
         if inspect.isclass(func):
             _COMMAND_HANDLERS[command_cls] = func
-        elif inspect.isfunction(func):
+        else:
             def factory(**kwargs):
                 return FunctionBaseHandler(func, **kwargs)
 
             _COMMAND_HANDLERS[command_cls] = factory
-        else:
-            print('command handler must be a function or class')
-            raise BusResolverError
 
         return func
 
@@ -86,14 +83,11 @@ def query_processor(query_cls: type):
     def decorator(func):
         if inspect.isclass(func):
             _QUERY_HANDLERS[query_cls] = func
-        elif inspect.isfunction(func):
+        else:
             def factory(**kwargs):
                 return FunctionBaseProcessor(func, **kwargs)
 
             _QUERY_HANDLERS[query_cls] = factory
-        else:
-            print('query processor must be a function or class')
-            raise BusResolverError
 
         return func
 

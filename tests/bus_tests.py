@@ -3,7 +3,7 @@ import unittest
 from aiounittest import async_test
 
 from eventsource.services.commandbus import Command, command_handler, Bus, QuerySpec, query_processor, BusResolverError, \
-    AggregateCommand
+    AggregateCommand, CommandHandler, QueryProcessor
 
 
 class BusTests(unittest.TestCase):
@@ -141,3 +141,36 @@ class BusTests(unittest.TestCase):
         bus = Bus()
         await bus.execute_command(TestAggregateCommand(originator_id=expected_id))
         self.assertEqual(expected_id, passed_id)
+
+    @async_test
+    async def test_class_command_handler_should_executer(self):
+        class TestCommand(Command): ...
+
+        called = False
+
+        @command_handler(TestCommand)
+        class TestHandler(CommandHandler):
+            async def handle(self, command: TestCommand):
+                nonlocal called
+                called = True
+
+        bus = Bus()
+        await bus.execute_command(TestCommand())
+        self.assertTrue(called)
+
+    @async_test
+    async def test_class_query_processor_should_executer(self):
+        class TestQuery(QuerySpec[bool, bool]): ...
+
+        called = False
+
+        @query_processor(TestQuery)
+        class TestProcessor(QueryProcessor[bool, bool]):
+            async def run(self, query: TestQuery):
+                nonlocal called
+                called = True
+                return query.data
+
+        bus = Bus()
+        await bus.run_query(TestQuery(True))
+        self.assertTrue(called)
