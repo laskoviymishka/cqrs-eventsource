@@ -3,7 +3,6 @@ import inspect
 from abc import abstractmethod, ABCMeta
 from typing import Generic, TypeVar, Dict, Callable
 
-TInput = TypeVar('TInput')
 TOutput = TypeVar('TOutput')
 
 
@@ -35,25 +34,25 @@ class FunctionBaseHandler(CommandHandler):
         await self.func(command, **self.__dict__)
 
 
-class QuerySpec(Generic[TInput, TOutput], metaclass=ABCMeta):
-    def __init__(self, data: TInput):
-        self.data: TInput = data
+class QuerySpec(Generic[TOutput], metaclass=ABCMeta):
+    def __init__(self, **kwargs):
+        self.__dict__.update(**kwargs)
 
 
-class QueryProcessor(Generic[TInput, TOutput], metaclass=ABCMeta):
+class QueryProcessor(Generic[TOutput], metaclass=ABCMeta):
     def __init__(self, **kwargs):
         self.__dict__.update(**kwargs)
 
     @abstractmethod
-    async def run(self, query: QuerySpec[TInput, TOutput]) -> TOutput: ...
+    async def run(self, query: QuerySpec[TOutput]) -> TOutput: ...
 
 
-class FunctionBaseProcessor(QueryProcessor[TInput, TOutput]):
+class FunctionBaseProcessor(QueryProcessor[TOutput]):
     def __init__(self, func: Callable, **kwargs):
         self.func = func
         super().__init__(**kwargs)
 
-    async def run(self, query: QuerySpec[TInput, TOutput]):
+    async def run(self, query: QuerySpec[TOutput]):
         return await self.func(query, **self.__dict__)
 
 

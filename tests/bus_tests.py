@@ -58,7 +58,9 @@ class BusTests(unittest.TestCase):
 
     @async_test
     async def test_query_handler_should_return(self):
-        class TestQuery(QuerySpec[bool, bool]): ...
+        class TestQuery(QuerySpec[bool]):
+            data: bool
+            ...
 
         @query_processor(TestQuery)
         async def test_query_processor(query: TestQuery, **kwargs) -> bool:
@@ -66,23 +68,23 @@ class BusTests(unittest.TestCase):
             return True
 
         bus = Bus()
-        res = await bus.run_query(TestQuery(True))
+        res = await bus.run_query(TestQuery(data=True))
         self.assertTrue(res)
 
     @async_test
     async def test_query_should_pass_argument_from_bus_constructor(self):
-        class TestQuery(QuerySpec[bool, bool]): ...
+        class TestQuery(QuerySpec[bool]): ...
 
         @query_processor(TestQuery)
         async def test_query_processor(query: TestQuery, test_data: bool, **kwargs) -> bool:
             return test_data
 
         bus = Bus(test_data=True)
-        self.assertTrue(await bus.run_query(TestQuery(True)))
+        self.assertTrue(await bus.run_query(TestQuery(data=True)))
 
     @async_test
     async def test_query_should_raise_argument_error_when_bus_not_have_one(self):
-        class TestQuery(QuerySpec[bool, bool]):
+        class TestQuery(QuerySpec[bool]):
             ...
 
         @query_processor(TestQuery)
@@ -92,7 +94,7 @@ class BusTests(unittest.TestCase):
         error_raised = False
         bus = Bus(test_data=True)
         try:
-            await bus.run_query(TestQuery(True))
+            await bus.run_query(TestQuery(data=True))
         except TypeError:
             error_raised = True
 
@@ -114,13 +116,13 @@ class BusTests(unittest.TestCase):
 
     @async_test
     async def test_query_should_raise_when_command_not_handled(self):
-        class TestQuery(QuerySpec[bool, bool]):
+        class TestQuery(QuerySpec[bool]):
             ...
 
         error_raised = False
         bus = Bus()
         try:
-            await bus.run_query(TestQuery(True))
+            await bus.run_query(TestQuery(data=True))
         except BusResolverError:
             error_raised = True
 
@@ -160,17 +162,19 @@ class BusTests(unittest.TestCase):
 
     @async_test
     async def test_class_query_processor_should_executer(self):
-        class TestQuery(QuerySpec[bool, bool]): ...
+        class TestQuery(QuerySpec[bool]):
+            data: bool
+            ...
 
         called = False
 
         @query_processor(TestQuery)
-        class TestProcessor(QueryProcessor[bool, bool]):
+        class TestProcessor(QueryProcessor[bool]):
             async def run(self, query: TestQuery):
                 nonlocal called
                 called = True
                 return query.data
 
         bus = Bus()
-        await bus.run_query(TestQuery(True))
+        await bus.run_query(TestQuery(data=True))
         self.assertTrue(called)
