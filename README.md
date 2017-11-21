@@ -1,7 +1,8 @@
 # Event Sourcing in Python
 
-[![Build Status](https://secure.travis-ci.org/johnbywater/eventsourcing.png)](https://travis-ci.org/laskoviymishka/cqrs-eventsource)
-[![Coverage Status](https://coveralls.io/repos/github/johnbywater/eventsourcing/badge.svg)](https://coveralls.io/github/laskoviymishka/cqrs-eventsource)
+[![Build Status](https://secure.travis-ci.org/laskoviymishka/cqrs-eventsource.png)](https://travis-ci.org/laskoviymishka/cqrs-eventsource)
+[![Coverage Status](https://coveralls.io/repos/github/laskoviymishka/cqrs-eventsource/badge.svg?branch=master)](https://coveralls.io/github/laskoviymishka/cqrs-eventsource?branch=master)
+
 
 A library for event sourcing in Python.
 
