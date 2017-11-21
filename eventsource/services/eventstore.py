@@ -3,7 +3,6 @@ from abc import ABCMeta, abstractmethod
 
 import six
 
-from eventsource.services.iterators import SequencedItemIterator
 from eventsource.services.sequenceditemmapper import AbstractSequencedItemMapper
 from eventsource.services.activerecord import AbstractActiveRecordStrategy
 from eventsource.exceptions import SequencedItemError, ConcurrencyError
@@ -43,8 +42,6 @@ class AbstractEventStore(six.with_metaclass(ABCMeta)):
 
 
 class EventStore(AbstractEventStore):
-    iterator_class = SequencedItemIterator
-
     def __init__(self, active_record_strategy, sequenced_item_mapper=None):
         assert isinstance(active_record_strategy, AbstractActiveRecordStrategy), active_record_strategy
         assert isinstance(sequenced_item_mapper, AbstractSequencedItemMapper), sequenced_item_mapper
