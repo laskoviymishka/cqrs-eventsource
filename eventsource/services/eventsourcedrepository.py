@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Generic
 
 from eventsource.model.entity import AbstractEntityRepository, mutate_entity, DomainEntity
 from eventsource.model.events import EventSession
@@ -11,7 +11,7 @@ from eventsource.services.eventstore import AbstractEventStore
 T = TypeVar('T')
 
 
-class EventSourcedRepository(AbstractEntityRepository[T]):
+class EventSourcedRepository(AbstractEntityRepository[T], Generic[T]):
     # If the entity won't have very many events, marking the entity as
     # "short" by setting __is_short__ value equal to True will mean
     # the fastest path for getting all the events is used. If you set

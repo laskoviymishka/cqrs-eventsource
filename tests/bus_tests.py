@@ -1,13 +1,10 @@
-import unittest
-
-from aiounittest import async_test
+import asynctest
 
 from eventsource.services.commandbus import Command, command_handler, Bus, QuerySpec, query_processor, BusResolverError, \
     AggregateCommand, CommandHandler, QueryProcessor
 
 
-class BusTests(unittest.TestCase):
-    @async_test
+class BusTests(asynctest.TestCase):
     async def test_command_handler_should_called(self):
         was_called = False
 
@@ -23,7 +20,6 @@ class BusTests(unittest.TestCase):
         await bus.execute_command(TestCommand())
         self.assertTrue(was_called)
 
-    @async_test
     async def test_command_should_pass_argument_from_bus_constructor(self):
         was_called = False
 
@@ -38,7 +34,6 @@ class BusTests(unittest.TestCase):
         await bus.execute_command(TestCommand())
         self.assertTrue(was_called)
 
-    @async_test
     async def test_command_should_raise_argument_error_when_bus_not_have_one(self):
         class TestCommand(Command):
             ...
@@ -56,7 +51,6 @@ class BusTests(unittest.TestCase):
 
         self.assertTrue(error_raised)
 
-    @async_test
     async def test_query_handler_should_return(self):
         class TestQuery(QuerySpec[bool]):
             data: bool
@@ -71,7 +65,6 @@ class BusTests(unittest.TestCase):
         res = await bus.run_query(TestQuery(data=True))
         self.assertTrue(res)
 
-    @async_test
     async def test_query_should_pass_argument_from_bus_constructor(self):
         class TestQuery(QuerySpec[bool]): ...
 
@@ -82,7 +75,6 @@ class BusTests(unittest.TestCase):
         bus = Bus(test_data=True)
         self.assertTrue(await bus.run_query(TestQuery(data=True)))
 
-    @async_test
     async def test_query_should_raise_argument_error_when_bus_not_have_one(self):
         class TestQuery(QuerySpec[bool]):
             ...
@@ -100,7 +92,6 @@ class BusTests(unittest.TestCase):
 
         self.assertTrue(error_raised)
 
-    @async_test
     async def test_command_should_raise_when_command_not_handled(self):
         class TestCommand(Command):
             ...
@@ -114,7 +105,6 @@ class BusTests(unittest.TestCase):
 
         self.assertTrue(error_raised)
 
-    @async_test
     async def test_query_should_raise_when_command_not_handled(self):
         class TestQuery(QuerySpec[bool]):
             ...
@@ -128,7 +118,6 @@ class BusTests(unittest.TestCase):
 
         self.assertTrue(error_raised)
 
-    @async_test
     async def test_aggregate_command_should_pass_originator(self):
         class TestAggregateCommand(AggregateCommand): ...
 
@@ -144,7 +133,6 @@ class BusTests(unittest.TestCase):
         await bus.execute_command(TestAggregateCommand(originator_id=expected_id))
         self.assertEqual(expected_id, passed_id)
 
-    @async_test
     async def test_class_command_handler_should_executer(self):
         class TestCommand(Command): ...
 
@@ -160,7 +148,6 @@ class BusTests(unittest.TestCase):
         await bus.execute_command(TestCommand())
         self.assertTrue(called)
 
-    @async_test
     async def test_class_query_processor_should_executer(self):
         class TestQuery(QuerySpec[bool]):
             data: bool

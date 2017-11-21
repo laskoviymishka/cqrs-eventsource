@@ -27,6 +27,7 @@ setup(
         'peewee_async',
         'aiounittest',
         'aiopg',
+        'asynctest',
     ],
     zip_safe=False,
     long_description=long_description,

@@ -1,7 +1,5 @@
-from six import moves
 from builtins import list
 from peewee_async import execute
-from builtins import BaseException
 from playhouse.postgres_ext import JSONField
 from peewee import *
 from eventsource.services.activerecord import AbstractActiveRecordStrategy
@@ -22,8 +20,8 @@ class PeweeActiveRecordStrategy(AbstractActiveRecordStrategy):
         else:
             active_records = [self.to_active_record(sequenced_item_or_items)]
 
-        for record in active_records:
-            await self.manager.create(EventRecord, **record)
+        async with self.manager.atomic():
+            await self.manager.execute(EventRecord.insert_many(active_records))
 
     async def get_item(self, sequence_id, eq):
         return await EventRecord \
@@ -50,8 +48,11 @@ class PeweeActiveRecordStrategy(AbstractActiveRecordStrategy):
         else:
             query = query.order_by(EventRecord.position.desc())
 
-        events = moves.map(self.from_active_record, query)
-        events = list(events)
+        events = []
+        async with self.manager.atomic():
+            for row in await self.manager.execute(query):
+                events.append(self.from_active_record(row))
+
         return events
 
     async def all_items(self):
